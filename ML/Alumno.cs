@@ -18,6 +18,7 @@ namespace ML
 
         //Propiedad de navegación
         public ML.Semestre Semestre { get; set; }
+        public ML.Horario Horario { get; set; }
 
         //public ML.Horario Horario { get; set; }
     }
