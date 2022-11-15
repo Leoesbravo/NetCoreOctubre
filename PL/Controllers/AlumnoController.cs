@@ -66,5 +66,64 @@ namespace PL.Controllers
                 return View(alumno);
             }
         }
+
+        [HttpPost]
+        public ActionResult Form(ML.Alumno alumno)
+        {
+            IFormFile image = Request.Form.Files["IFImage"];
+
+
+                //valido si traigo imagen
+                if (image != null)
+                {
+                    //llamar al metodo que convierte a bytes la imagen
+                    byte[] ImagenBytes = ConvertToBytes(image);
+                    //convierto a base 64 la imagen y la guardo en la propiedad de imagen en el objeto alumno
+                    alumno.Imagen = Convert.ToBase64String(ImagenBytes);
+                }
+
+                ML.Result result = new ML.Result();
+
+                if (alumno.IdAlumno == 0)
+                {
+                    result = BL.Alumno.Add(alumno);
+
+                    if (result.Correct)
+                    {
+                        ViewBag.Message = "Alumno agregado correctamente";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Ocurrio un error al agregar al alumno" + result.ErrorMessage;
+                    }
+
+                }
+                else
+                {
+                    //result = BL.Alumno.Update(alumno);
+
+                    //if (result.Correct)
+                    //{
+                    //    ViewBag.Message = "Alumno actualizado correctamente";
+                    //}
+                    //else
+                    //{
+                    //    ViewBag.Message = "Ocurrio un error al actualizar al alumno" + result.ErrorMessage;
+                    //}
+
+                }
+                return View("Modal");
+
+        }
+        public static byte[] ConvertToBytes(IFormFile imagen)
+        {
+
+            using var fileStream = imagen.OpenReadStream();
+
+            byte[] bytes = new byte[fileStream.Length];
+            fileStream.Read(bytes, 0, (int)fileStream.Length);
+
+            return bytes;
+        }
     }
 }
