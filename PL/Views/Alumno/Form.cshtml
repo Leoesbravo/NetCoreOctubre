@@ -16,57 +16,51 @@
                 <div class="form-horizontal">
 
                     <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
 
-                        <div class="col-md-3">
+                                @Html.LabelFor(model => model.IdAlumno, new { @class = "hidden" })
 
-                            @Html.LabelFor(model => model.IdAlumno, new { @class = "hidden" })
+                                @Html.TextBoxFor(model => model.IdAlumno, new { @class = "hidden form-control" })
 
-                            @Html.TextBoxFor(model => model.IdAlumno, new { @class = "hidden form-control" })
+                                @Html.ValidationMessageFor(model => model.IdAlumno)
+                            </div>
+                            <div class="col-md-3">
 
-                            @Html.ValidationMessageFor(model => model.IdAlumno)
+                                @Html.LabelFor(model => model.Nombre)
 
+                                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @placeholder = "Ejemplo:Leonardo" })
+
+                                @Html.ValidationMessageFor(model => model.Nombre)
+
+                            </div>
+                            <div class="col-md-3">
+
+                                @Html.LabelFor(model => model.ApellidoPaterno)
+
+                                @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", @type = "password" })
+
+                                @Html.ValidationMessageFor(model => model.ApellidoPaterno)
+
+                            </div>
+                            <div class="col-md-3">
+
+                                @Html.LabelFor(model => model.ApellidoMaterno)
+
+                                @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control" })
+
+                                @Html.ValidationMessageFor(model => model.ApellidoMaterno)
+
+                            </div>
                         </div>
 
                     </div>
 
                     <div class="form-group">
-
-                        <div class="col-md-3">
-
-                            @Html.LabelFor(model => model.Nombre)
-
-                            @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @placeholder = "Ejemplo:Leonardo" })
-
-                            @Html.ValidationMessageFor(model => model.Nombre)
-
-                        </div>
-
                     </div>
                     <div class="form-group">
-
-                        <div class="col-md-3">
-
-                            @Html.LabelFor(model => model.ApellidoPaterno)
-
-                            @Html.TextBoxFor(model => model.ApellidoPaterno, new { @class = "form-control", @type = "password" })
-
-                            @Html.ValidationMessageFor(model => model.ApellidoPaterno)
-
-                        </div>
-
                     </div>
                     <div class="form-group">
-
-                        <div class="col-md-3">
-
-                            @Html.LabelFor(model => model.ApellidoMaterno)
-
-                            @Html.TextBoxFor(model => model.ApellidoMaterno, new { @class = "form-control" })
-
-                            @Html.ValidationMessageFor(model => model.ApellidoMaterno)
-
-                        </div>
-
                     </div>
                     <div class="form-group">
 
@@ -120,18 +114,18 @@
                         <div class="col-md-3">
 
                             <div class="form-group">
-                                
 
-                                    @Html.LabelFor(model => model.Horario.Grupo)
-                                    @if (Model.Horario.Grupo.Grupos == null)
-                                    {
-                                        @Html.DropDownListFor(model => model.Horario.Grupo.IdGrupo, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlGrupo", @class = "form-control" })
-                                    }
 
-                                    else
-                                    {
-                                        @Html.DropDownListFor(model => model.Horario.Grupo.IdGrupo, new SelectList(Model.Horario.Grupo.Grupos, "IdGrupo", "Nombre"), "Seleciona un grupo", htmlAttributes: new { id = "ddlGrupo", @class = "form-control" })
-                                    }
+                                @Html.LabelFor(model => model.Horario.Grupo)
+                                @if (Model.Horario.Grupo.Grupos == null)
+                                {
+                                    @Html.DropDownListFor(model => model.Horario.Grupo.IdGrupo, new SelectList(string.Empty, "Value", "Text"), "Seleciona un grupo", htmlAttributes: new { id = "ddlGrupo", @class = "form-control" })
+                                }
+
+                                else
+                                {
+                                    @Html.DropDownListFor(model => model.Horario.Grupo.IdGrupo, new SelectList(Model.Horario.Grupo.Grupos, "IdGrupo", "Nombre"), "Seleciona un grupo", htmlAttributes: new { id = "ddlGrupo", @class = "form-control" })
+                                }
 
                             </div>
 
@@ -189,7 +183,14 @@
             });
         })
     })
-    
-    
+
+
 </script>
 }
+@*<div class="col-md-3">
+            @Html.LabelFor(model => model.Nombre)
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-controller"></i></span>
+                @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @id = "txtNombre", @placeholder="Ejemp: Historia", autocomplete = "off" })
+                @Html.ValidationMessageFor(model => model.Nombre, null, new { @class = "text-danger"})
+            </div>*@
