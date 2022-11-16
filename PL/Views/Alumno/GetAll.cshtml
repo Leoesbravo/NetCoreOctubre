@@ -44,7 +44,7 @@
         @foreach (ML.Alumno alumno in Model.Alumnos)
         {
             <tr>
-                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-warning glyphicon" href="@Url.Action("Form", "Usuario", new { IdAlumno = alumno.IdAlumno })"><i class="bi bi-pencil-square" style="color: ivory"></i></a></td>
+                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-warning" href="@Url.Action("Form", "Usuario", new { IdAlumno = alumno.IdAlumno })"><i class="bi bi-pencil-square" style="color: ivory"></i></a></td>
                 <td style="display :none;">@alumno.IdAlumno </td>
                 <td>@alumno.Nombre</td>
                 <td>@alumno.ApellidoPaterno</td>
@@ -53,7 +53,7 @@
                 <td>@alumno.Semestre.Nombre</td>
                 <td>@alumno.FechaNacimiento</td>
               
-                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger glyphicon glyphicon-trash" href="@Url.Action("Delete", "Usuario", new { IdAlumno= alumno.IdAlumno})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-eraser-fill" style="color: mintcream"></i></a></td>
+                <td style="text-align: center; vertical-align: middle;"><a class="btn btn-danger" href="@Url.Action("Delete", "Usuario", new { IdAlumno= alumno.IdAlumno})" onclick="return confirm('Estas seguro que deseas eliminar este registro?');"><i class="bi bi-eraser-fill" style="color: mintcream"></i></a></td>
             </tr>
         }
 
