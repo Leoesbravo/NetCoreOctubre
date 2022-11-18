@@ -7,7 +7,7 @@ Console.ReadKey();
 
 static void ReadFile()
 {
-    string file = @"C:\Users\digis\Documents\Isaac Jair Espinoza Ocampo\BlocdeNotas\LayoutAlumnos.txt";
+    string file = @"C:\Users\digis\Desktop\CargaMasica.txt";
 
     if (File.Exists(file))
     {
