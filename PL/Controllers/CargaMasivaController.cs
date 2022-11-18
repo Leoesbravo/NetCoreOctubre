@@ -5,6 +5,16 @@ namespace PL.Controllers
 {
     public class CargaMasivaController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+
+        public CargaMasivaController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        {
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         [HttpGet]
         public ActionResult CargaMasiva()
         {
@@ -62,5 +72,26 @@ namespace PL.Controllers
             }
             return PartialView("Modal");
         }
+        [HttpPost]
+        public ActionResult AlumnoCargaMasiva(ML.Alumno alumno)
+        {
+            
+            IFormFile archivo = Request.Form.Files["FileExcel"];
+            //Session 
+
+            if (HttpContext.Session.GetString("PathArchivo") == null)
+            {
+               
+            }
+            else
+            {
+                
+
+
+
+            }
+            return PartialView("Modal");
+        }
+
     }
 }
