@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ML;
 using System.IO;
 
 namespace PL.Controllers
@@ -18,7 +19,8 @@ namespace PL.Controllers
         [HttpGet]
         public ActionResult CargaMasiva()
         {
-            return View();
+            ML.Result result = new Result();
+            return View(result);
         }
 
         [HttpPost]
@@ -76,16 +78,47 @@ namespace PL.Controllers
         public ActionResult AlumnoCargaMasiva(ML.Alumno alumno)
         {
             
-            IFormFile archivo = Request.Form.Files["FileExcel"];
+            IFormFile excelCargaMasiva = Request.Form.Files["FileExcel"];
             //Session 
 
-            if (HttpContext.Session.GetString("PathArchivo") == null)
+            if (HttpContext.Session.GetString("PathArchivo") == null) //sesion nula o que no exista 
             {
-               
+                //validar el excel
+
+                if (excelCargaMasiva.Length > 0)
+                {
+                    //que sea .xlsx
+                    string fileName = Path.GetFileName(excelCargaMasiva.FileName);
+                    string folderPath = _configuration["PathFolder:value"];
+                    string extensionArchivo = Path.GetExtension(excelCargaMasiva.FileName).ToLower();
+                    string extensionModulo = _configuration["TipoExcel"];
+
+                    if (extensionArchivo == extensionModulo)
+                    {
+                        //crear copia
+                        string filePath = Path.Combine(_hostingEnvironment.ContentRootPath, folderPath, Path.GetFileNameWithoutExtension(fileName)) + '-' + DateTime.Now.ToString("yyyyMMddHHmmss") + ".xlsx";
+                        if (!System.IO.File.Exists(filePath))
+                        {
+                            using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                excelCargaMasiva.CopyTo(stream);
+                            }
+                            //leer
+                        }
+                    }
+
+                }
+
+
+                
+                //verificar que no tenga errores 
+                //le avisamos al usuario que el excel esta mal ML.ErrorExcel 
+                //crea la sesion 
             }
             else
             {
-                
+                //add 
+                //errores al agregar 
 
 
 
