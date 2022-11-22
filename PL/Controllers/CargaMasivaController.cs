@@ -17,7 +17,7 @@ namespace PL.Controllers
         }
 
         [HttpGet]
-        public ActionResult CargaMasiva()
+        public ActionResult AlumnoCargaMasiva()
         {
             ML.Result result = new Result();
             return View(result);
@@ -88,7 +88,7 @@ namespace PL.Controllers
                 if (excelCargaMasiva.Length > 0)
                 {
                     //que sea .xlsx
-                    string fileName = Path.GetFileName(excelCargaMasiva.FileName);
+                    string fileName = Path.GetFileName(excelCargaMasiva.FileName); 
                     string folderPath = _configuration["PathFolder:value"];
                     string extensionArchivo = Path.GetExtension(excelCargaMasiva.FileName).ToLower();
                     string extensionModulo = _configuration["TipoExcel"];
@@ -104,6 +104,29 @@ namespace PL.Controllers
                                 excelCargaMasiva.CopyTo(stream);
                             }
                             //leer
+                            string connectionString = _configuration["ConnectionStringExcel:value"] + filePath;
+                            //convertExceltodatatable
+
+                            ML.Result resultConvertExcel = BL.Alumno.ConvertirExceltoDataTable(connectionString);
+
+                            if (resultConvertExcel.Correct)
+                            {
+                                ML.Result resultValidacion = BL.Alumno.ValidarExcel(resultConvertExcel.Objects);
+                                if (resultValidacion.Objects.Count == 0)
+                                {
+                                    resultValidacion.Correct = true;
+                                    HttpContext.Session.SetString("PathArchivo", filePath);
+                                }
+
+                                return View("AlumnoCargaMasiva",resultValidacion);
+                            }
+                            else
+                            {
+                                //error al leer el archivo
+                                ViewBag.Message = "Ocurrio un error al leer el arhivo";
+                                return View("Modal");
+                            }
+
                         }
                     }
 
@@ -117,13 +140,48 @@ namespace PL.Controllers
             }
             else
             {
-                //add 
-                //errores al agregar 
+                string rutaArchivoExcel = HttpContext.Session.GetString("PathArchivo");
+                string connectionString = _configuration["ConnectionStringExcel:value"] + rutaArchivoExcel;
 
+                ML.Result resultData = BL.Alumno.ConvertirExceltoDataTable(connectionString);
+                if (resultData.Correct)
+                {
+                    ML.Result resultErrores = new ML.Result();
+                    resultErrores.Objects = new List<object>();
 
+                    foreach (ML.Alumno alumnoItem in resultData.Objects)
+                    {
+
+                        ML.Result resultAdd = BL.Alumno.Add(alumnoItem);
+                        if (!resultAdd.Correct)
+                        {
+                            resultErrores.Objects.Add("No se insertó el Alumno con nombre: " + alumnoItem.Nombre + " Error: " + resultAdd.ErrorMessage);
+                        }
+                    }
+                    if (resultErrores.Objects.Count > 0)
+                    {
+
+                        string fileError = Path.Combine(_hostingEnvironment.WebRootPath, @"~\Files\logErrores.txt");
+                        using (StreamWriter writer = new StreamWriter(fileError))
+                        {
+                            foreach (string ln in resultErrores.Objects)
+                            {
+                                writer.WriteLine(ln);
+                            }
+                        }
+                        ViewBag.Message = "Las Materias No han sido registrados correctamente";
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Las Materias han sido registrados correctamente";
+
+                    }
+
+                }
 
             }
             return PartialView("Modal");
+
         }
 
     }

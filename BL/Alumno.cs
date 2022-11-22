@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Data.OleDb;
 
 namespace BL
 {
@@ -135,5 +137,126 @@ namespace BL
         //    }
         //    return result;
         //}
+
+        public static ML.Result ConvertirExceltoDataTable(string connString)
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                using (OleDbConnection context = new OleDbConnection(connString))
+                {
+                    string query = "SELECT * FROM [Sheet1$]";
+                    using (OleDbCommand cmd = new OleDbCommand())
+                    {
+                        cmd.CommandText = query;
+                        cmd.Connection = context;
+
+
+                        OleDbDataAdapter da = new OleDbDataAdapter();
+                        da.SelectCommand = cmd;
+
+                        DataTable tablealumno = new DataTable();
+
+                        da.Fill(tablealumno);
+
+                        if (tablealumno.Rows.Count > 0)
+                        {
+                            result.Objects = new List<object>();
+
+                            foreach (DataRow row in tablealumno.Rows)
+                            {
+                                ML.Alumno alumno = new ML.Alumno();
+
+                                alumno.Nombre = row[0].ToString();
+                                alumno.ApellidoPaterno = row[1].ToString();
+                                alumno.ApellidoMaterno = row[2].ToString();
+                                alumno.FechaNacimiento = row[3].ToString();
+                                alumno.Sexo = row[4].ToString();
+
+                                alumno.Semestre = new ML.Semestre();
+                                alumno.Semestre.IdSemestre = int.Parse(row[5].ToString());
+
+
+
+                                result.Objects.Add(alumno);
+                            }
+
+                            result.Correct = true;
+
+                        }
+
+                        if (tablealumno.Rows.Count > 1)
+                        {
+                            result.Correct = true;
+                        }
+                        else
+                        {
+                            result.Correct = false;
+                            result.ErrorMessage = "No existen registros en el excel";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+
+            }
+
+            return result;
+
+        }
+        public static ML.Result ValidarExcel(List<object> Object)
+        {
+            ML.Result result = new ML.Result();
+
+            try
+            {
+                result.Objects = new List<object>();
+                //DataTable  //Rows //Columns
+                int i = 1;
+                foreach (ML.Alumno alumno in Object)
+                {
+                    ML.ErrorExcel error = new ML.ErrorExcel();
+                    error.IdRegistro = i++;
+
+
+                    alumno.Nombre = (alumno.Nombre == "") ? error.Mensaje += "Ingresar el nombre  " : alumno.Nombre; //operador ternario
+
+                    if (alumno.ApellidoPaterno == "")
+                    {
+                        error.Mensaje += "Ingresar el Apellido Paterno ";
+                    }
+                    if (alumno.ApellidoMaterno == "")
+                    {
+                        error.Mensaje += "Ingresar el Apellido Materno ";
+                    }
+                    if (alumno.Semestre.IdSemestre.ToString() == "")
+                    {
+                        error.Mensaje += "Ingresar el semestre ";
+                    }
+
+
+
+                    if (error.Mensaje != null)
+                    {
+                        result.Objects.Add(error);
+                    }
+
+
+                }
+                result.Correct = true;
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+
+            }
+
+            return result;
+        }
     }
 }
