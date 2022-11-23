@@ -46,7 +46,7 @@ public partial class LescogidoProgramacionNcapasOctubreContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.FechaNacimiento).HasColumnType("date");
-            entity.Property(e => e.Imagen).IsUnicode(false);
+            //entity.Property(e => e.Imagen).IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(20)
                 .IsUnicode(false);

@@ -13,7 +13,8 @@ namespace BL
             {
                 using (DL.LescogidoProgramacionNcapasOctubreContext context = new DL.LescogidoProgramacionNcapasOctubreContext())
                 {
-                    var usuarios = context.Alumnos.FromSqlRaw($"AlumnoGetAll '{alumno.Nombre}', '{alumno.ApellidoPaterno}'").ToList();
+                    alumno.Semestre.IdSemestre = (alumno.Semestre.IdSemestre == null) ? 0 : alumno.Semestre.IdSemestre; //operador ternario
+                    var usuarios = context.Alumnos.FromSqlRaw($"AlumnoGetAll '{alumno.Nombre}', '{alumno.ApellidoPaterno}', {alumno.Semestre.IdSemestre}").ToList();
                     result.Objects = new List<object>();
                     if (usuarios != null)
                     {

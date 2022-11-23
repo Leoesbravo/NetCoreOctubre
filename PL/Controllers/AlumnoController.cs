@@ -9,11 +9,14 @@ namespace PL.Controllers
         {
             ML.Alumno alumno = new ML.Alumno();
             ML.Result result = new ML.Result();
+            alumno.Semestre = new ML.Semestre();
+
+            ML.Result resultSemestre = BL.Semestre.GetAll();
             result = BL.Alumno.GetAll(alumno);
 
             if (result.Correct)
             {
-                
+                alumno.Semestre.Semestres = resultSemestre.Objects;
                 alumno.Alumnos = result.Objects;
                 return View(alumno);
             }
@@ -27,11 +30,16 @@ namespace PL.Controllers
         public ActionResult GetAll(ML.Alumno alumno)
         {
             ML.Result result = new ML.Result();
+            alumno.Semestre = new ML.Semestre();
+
+            ML.Result resultSemestre = BL.Semestre.GetAll();
             result = BL.Alumno.GetAll(alumno);
 
             if (result.Correct)
             {
                 alumno.Alumnos = result.Objects;
+                alumno.Semestre.Semestres = resultSemestre.Objects;
+
                 return View(alumno);
             }
             else
