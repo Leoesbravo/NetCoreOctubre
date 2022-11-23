@@ -6,33 +6,33 @@ namespace BL
 {
     public class Alumno
     {
-        public static ML.Result GetAll()
+        public static ML.Result GetAll(ML.Alumno alumno)
         {
             ML.Result result = new ML.Result();
             try
             {
                 using (DL.LescogidoProgramacionNcapasOctubreContext context = new DL.LescogidoProgramacionNcapasOctubreContext())
                 {
-                    var usuarios = context.Alumnos.FromSqlRaw("AlumnoGetAll") .ToList();
+                    var usuarios = context.Alumnos.FromSqlRaw($"AlumnoGetAll '{alumno.Nombre}', '{alumno.ApellidoPaterno}'").ToList();
                     result.Objects = new List<object>();
                     if (usuarios != null)
                     {
                         foreach (var objAlumno in usuarios)
                         {
 
-                            ML.Alumno alumno = new ML.Alumno();
-                            alumno.IdAlumno = objAlumno.IdAlumno;
-                            alumno.Nombre = objAlumno.Nombre;
-                            alumno.ApellidoPaterno = objAlumno.ApellidoPaterno;
-                            alumno.ApellidoMaterno = objAlumno.ApellidoMaterno;
-                            alumno.FechaNacimiento = objAlumno.FechaNacimiento.Value.ToString("dd-MM-yyyy");
-                            alumno.Sexo = objAlumno.Sexo;
+                            ML.Alumno alumnoobj = new ML.Alumno();
+                            alumnoobj.IdAlumno = objAlumno.IdAlumno;
+                            alumnoobj.Nombre = objAlumno.Nombre;
+                            alumnoobj.ApellidoPaterno = objAlumno.ApellidoPaterno;
+                            alumnoobj.ApellidoMaterno = objAlumno.ApellidoMaterno;
+                            alumnoobj.FechaNacimiento = objAlumno.FechaNacimiento.Value.ToString("dd-MM-yyyy");
+                            alumnoobj.Sexo = objAlumno.Sexo;
 
-                            alumno.Semestre = new ML.Semestre();
-                            alumno.Semestre.IdSemestre = objAlumno.IdSemestre.Value;
-                            alumno.Semestre.Nombre = objAlumno.Semestre;
+                            alumnoobj.Semestre = new ML.Semestre();
+                            alumnoobj.Semestre.IdSemestre = objAlumno.IdSemestre.Value;
+                            alumnoobj.Semestre.Nombre = objAlumno.Semestre;
 
-                            result.Objects.Add(alumno);
+                            result.Objects.Add(alumnoobj);
 
                         }
                         result.Correct = true;

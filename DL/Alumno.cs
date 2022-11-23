@@ -19,7 +19,7 @@ public partial class Alumno
 
     public int? IdSemestre { get; set; }
 
-    public string? Imagen { get; set; }
+    //public string? Imagen { get; set; }
 
     public virtual ICollection<Horario> Horarios { get; } = new List<Horario>();
 

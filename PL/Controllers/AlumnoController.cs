@@ -7,12 +7,30 @@ namespace PL.Controllers
         [HttpGet]
         public ActionResult GetAll()
         {
+            ML.Alumno alumno = new ML.Alumno();
             ML.Result result = new ML.Result();
-            result = BL.Alumno.GetAll();
+            result = BL.Alumno.GetAll(alumno);
 
             if (result.Correct)
             {
-                ML.Alumno alumno = new ML.Alumno();
+                
+                alumno.Alumnos = result.Objects;
+                return View(alumno);
+            }
+            else
+            {
+                ViewBag.Mensaje = "Ocurrio un error al consultar los alumnos";
+                return View();
+            }
+        }
+        [HttpPost]
+        public ActionResult GetAll(ML.Alumno alumno)
+        {
+            ML.Result result = new ML.Result();
+            result = BL.Alumno.GetAll(alumno);
+
+            if (result.Correct)
+            {
                 alumno.Alumnos = result.Objects;
                 return View(alumno);
             }
