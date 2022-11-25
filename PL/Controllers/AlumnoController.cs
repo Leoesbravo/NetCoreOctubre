@@ -99,14 +99,31 @@ namespace PL.Controllers
             IFormFile image = Request.Form.Files["IFImage"];
 
 
-                //valido si traigo imagen
-                if (image != null)
-                {
-                    //llamar al metodo que convierte a bytes la imagen
-                    byte[] ImagenBytes = ConvertToBytes(image);
-                    //convierto a base 64 la imagen y la guardo en la propiedad de imagen en el objeto alumno
-                    alumno.Imagen = Convert.ToBase64String(ImagenBytes);
-                }
+            //valido si traigo imagen
+            if (image != null)
+            {
+                //llamar al metodo que convierte a bytes la imagen
+                byte[] ImagenBytes = ConvertToBytes(image);
+                //convierto a base 64 la imagen y la guardo en la propiedad de imagen en el objeto alumno
+                alumno.Imagen = Convert.ToBase64String(ImagenBytes);
+            }
+            if (!ModelState.IsValid)
+            {
+                alumno.Semestre = new ML.Semestre();
+                ML.Result resultSemestre = BL.Semestre.GetAll();
+
+                alumno.Semestre.Semestres = resultSemestre.Objects;
+                alumno.Horario = new ML.Horario();
+                alumno.Horario.Grupo = new ML.Grupo();
+                alumno.Horario.Grupo.Plantel = new ML.Plantel();
+
+                ML.Result resultPlanteles = BL.Plantel.GetAll();
+                alumno.Horario.Grupo.Plantel.Planteles = resultPlanteles.Objects;
+                return View(alumno);
+            }
+            else
+            {
+
 
                 ML.Result result = new ML.Result();
 
@@ -139,7 +156,7 @@ namespace PL.Controllers
 
                 }
                 return View("Modal");
-
+            }
         }
         public static byte[] ConvertToBytes(IFormFile imagen)
         {

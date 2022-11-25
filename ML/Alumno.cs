@@ -13,8 +13,9 @@ namespace ML
         [Required]
         [StringLength(50)]
         public string Nombre { get; set; }
-        public string ApellidoPaterno { get; set; }
-        public string ApellidoMaterno { get; set; }
+        public string? ApellidoPaterno { get; set; }
+        public string? ApellidoMaterno { get; set; }
+
         public string FechaNacimiento { get; set; }
         public string Sexo { get; set; }
         public string Imagen { get; set; }
