@@ -32,6 +32,7 @@ namespace BL
                             alumnoobj.Semestre = new ML.Semestre();
                             alumnoobj.Semestre.IdSemestre = objAlumno.IdSemestre.Value;
                             alumnoobj.Semestre.Nombre = objAlumno.Semestre;
+                            alumnoobj.Status = objAlumno.Status.Value;
 
                             result.Objects.Add(alumnoobj);
 
@@ -257,6 +258,34 @@ namespace BL
 
             }
 
+            return result;
+        }
+        public static ML.Result ChangeStatus(int idAlumno, bool status)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LescogidoProgramacionNcapasOctubreContext context = new DL.LescogidoProgramacionNcapasOctubreContext())
+                {
+                    var usuarios = context.Database.ExecuteSqlRaw($"AlumnoChangeStatus {idAlumno}, {status}");
+
+                    if (usuarios > 0)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se ha podido realizar la consulta";
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+            }
             return result;
         }
     }

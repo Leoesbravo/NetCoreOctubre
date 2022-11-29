@@ -12,7 +12,7 @@ namespace PL.Controllers
             alumno.Semestre = new ML.Semestre();
 
             ML.Result resultSemestre = BL.Semestre.GetAll();
-            result = BL.Alumno.GetAll(alumno);
+             result = BL.Alumno.GetAll(alumno);
 
             if (result.Correct)
             {
@@ -167,6 +167,12 @@ namespace PL.Controllers
             fileStream.Read(bytes, 0, (int)fileStream.Length);
 
             return bytes;
+        }
+        public JsonResult CambiarStatus(int idAlumno, bool status)
+        {
+            ML.Result result = BL.Alumno.ChangeStatus(idAlumno,status);
+
+            return Json(result);
         }
     }
 }

@@ -19,6 +19,7 @@ namespace ML
         public string FechaNacimiento { get; set; }
         public string Sexo { get; set; }
         public string Imagen { get; set; }
+        public bool Status { get; set; }
         public List<object> Alumnos { get; set; }
 
         //Propiedad de navegación

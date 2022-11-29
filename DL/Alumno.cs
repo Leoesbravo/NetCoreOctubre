@@ -16,6 +16,7 @@ public partial class Alumno
     public DateTime? FechaNacimiento { get; set; }
 
     public string? Sexo { get; set; }
+    public bool? Status { get; set; }
 
     public int? IdSemestre { get; set; }
 
