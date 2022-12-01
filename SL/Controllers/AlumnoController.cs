@@ -18,7 +18,32 @@ namespace SL.Controllers
 
             if (result.Correct)
             {
-                return Ok();
+                return Ok(result);
+            }
+            else
+            {
+                return NotFound();
+            }
+            //return new string[] { "Leonardo", "Isaac","Jesus" };
+        }
+
+        [HttpPost("GetAll")]
+        public IActionResult GetAll(string? nombre,string? ap,string? am)
+        {
+            
+            ML.Alumno alumno = new ML.Alumno();
+
+            //alumno.Nombre = nombre;
+            alumno.Nombre = (nombre == null) ? "" : nombre;
+            alumno.ApellidoPaterno = (ap == null) ? "" : ap;
+            alumno.ApellidoMaterno = (am == null) ? "" : am;
+
+            alumno.Semestre = new ML.Semestre();
+            ML.Result result = BL.Alumno.GetAll(alumno);
+
+            if (result.Correct)
+            {
+                return Ok(result);
             }
             else
             {
