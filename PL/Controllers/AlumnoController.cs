@@ -4,6 +4,16 @@ namespace PL.Controllers
 {
     public class AlumnoController : Controller
     {
+        private readonly IConfiguration _configuration;
+
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+
+        public AlumnoController(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        {
+            _configuration = configuration;
+            _hostingEnvironment = hostingEnvironment;
+        }
+
         [HttpGet]
         public ActionResult GetAll()
         {
@@ -12,8 +22,45 @@ namespace PL.Controllers
             alumno.Semestre = new ML.Semestre();
 
             ML.Result resultSemestre = BL.Semestre.GetAll();
-             result = BL.Alumno.GetAll(alumno);
+             //result = BL.Alumno.GetAll(alumno);
+            //"UrlAPI": "http://localhost:5246/api/",
 
+            
+            try
+            {
+                string urlAPI = _configuration["UrlAPI"];
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(urlAPI);
+
+                    var responseTask = client.GetAsync("Alumno/GetAll");
+                    //result = bl.alumno.GetAll();
+                   
+                    responseTask.Wait();
+
+                    var resultServicio = responseTask.Result;
+
+                    if (resultServicio.IsSuccessStatusCode)
+                    {
+                        var readTask = resultServicio.Content.ReadAsAsync<ML.Result>();
+                        readTask.Wait();
+
+                        foreach (var resultItem in readTask.Result.Objects)
+                        {
+                            ML.Alumno resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<ML.Alumno>(resultItem.ToString());
+                            result.Objects.Add(resultItem);
+                        }
+
+                        result.Correct = true;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+            }
             if (result.Correct)
             {
                 alumno.Semestre.Semestres = resultSemestre.Objects;

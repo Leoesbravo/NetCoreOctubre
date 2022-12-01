@@ -71,9 +71,19 @@ namespace SL.Controllers
         }
 
         // POST api/<AlumnoController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("add")]
+        public IActionResult Post([FromBody] ML.Alumno alumno)
         {
+            ML.Result result = BL.Alumno.Add(alumno);
+
+            if (result.Correct)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
 
         // PUT api/<AlumnoController>/5
