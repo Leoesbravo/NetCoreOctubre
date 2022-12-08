@@ -139,7 +139,62 @@ namespace BL
             }
             return result;
         }
+        public static ML.Result GetByUsername(string username)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.LescogidoProgramacionNcapasOctubreContext context = new DL.LescogidoProgramacionNcapasOctubreContext())
+                {
+                    var obj = context.Alumnos.FromSqlRaw($"[AlumnoGetByUsername] {username}").FirstOrDefault();
+                    result.Objects = new List<object>();
 
+                    if (obj != null)
+                    {
+                        ML.Alumno alumno = new ML.Alumno();
+                        alumno.IdAlumno = obj.IdAlumno;
+                        alumno.Nombre = obj.Nombre;
+                        alumno.ApellidoPaterno = obj.ApellidoPaterno;
+                        alumno.ApellidoMaterno = obj.ApellidoMaterno;
+                        alumno.FechaNacimiento = obj.FechaNacimiento.Value.ToString("dd-MM-yyyy");
+                        alumno.Sexo = obj.Sexo;
+
+                        alumno.Semestre = new ML.Semestre();
+                        alumno.Semestre.IdSemestre = obj.IdSemestre.Value;
+
+                        //alumno.Horario = new ML.Horario();
+                        //alumno.Horario.IdHorario = obj.IdHorario;
+                        //alumno.Horario.Nombre = obj.HorarioNombre;
+
+                        //alumno.Horario.Grupo = new ML.Grupo();
+                        //alumno.Horario.Grupo.IdGrupo = obj.IdGrupo;
+                        //alumno.Horario.Grupo.Nombre = obj.NombreGrupo;
+
+                        //alumno.Horario.Grupo.Plantel = new ML.Plantel();
+                        //alumno.Horario.Grupo.Plantel.IdPlantel = obj.IdPlantel;
+                        //alumno.Horario.Grupo.Plantel.Nombre = obj.NombrePlantel;
+
+                        result.Object = alumno;
+                        result.Correct = true;
+
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "No se pudo realizar la consulta";
+                    }
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result;
+        }
         public static ML.Result ConvertirExceltoDataTable(string connString)
         {
             ML.Result result = new ML.Result();

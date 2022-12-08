@@ -33,7 +33,7 @@ namespace PL.Controllers
                 {
                     client.BaseAddress = new Uri(urlAPI);
 
-                    var responseTask = client.GetAsync("Alumno/GetAll");
+                    var responseTask = client.GetAsync("Alumno/Add");
                     //result = bl.alumno.GetAll();
                    
                     responseTask.Wait();
@@ -221,5 +221,36 @@ namespace PL.Controllers
 
             return Json(result);
         }
+
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Login(string userName, string password)
+        {
+            ML.Result result = BL.Alumno.GetByUsername(userName);
+            if (result.Correct)
+            {
+                ML.Alumno alumno = new ML.Alumno();
+                if(alumno.password == password)
+                {
+                    return View("home", "Index");
+                }
+                else
+                {
+                    ViewBag.Mensaje = "el usuario o la contraseña son incorrectos";
+                    return PartialView("Modal")
+                }
+            }
+            else
+            {
+                ViewBag.Mensaje = "el usuario o la contraseña son incorrectos";
+                return PartialView("Modal")
+            }
+            return View();
+        }
     }
+
 }
